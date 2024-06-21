@@ -13,7 +13,7 @@ public class MapperUsuario {
         Usuario user = new Usuario();
         user.setNombre(dto.nombre());
         user.setCorreo(dto.correo());
-        user.setContrasena(dto.contrasenha());
+        user.setClave(dto.contrasenha());
         user.setRoles(roles);
 
         return user;

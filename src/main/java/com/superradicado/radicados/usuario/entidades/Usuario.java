@@ -15,7 +15,7 @@ public class Usuario {
     @Column(name = "ID_USUARIO")
     private Long id;
     private String nombre;
-    private String contrasena;
+    private String clave;
     private String correo;
     private Boolean estado;
     @Column(name = "FECHA_CREACION")
@@ -35,17 +35,17 @@ public class Usuario {
         this.fechaCracion = LocalDateTime.now();
     }
 
-    public Usuario(String nombre, String contrasena, String correo) {
+    public Usuario(String nombre, String clave, String correo) {
         this.nombre = nombre;
-        this.contrasena = contrasena;
+        this.clave = clave;
         this.correo = correo;
         this.estado = false;
         this.fechaCracion = LocalDateTime.now();
     }
 
-    public Usuario(String nombre, String contrasena, Set<Roles> roles) {
+    public Usuario(String nombre, String clave, Set<Roles> roles) {
         this.nombre = nombre;
-        this.contrasena = contrasena;
+        this.clave = clave;
         this.roles = roles;
         this.estado = false;
         this.fechaCracion = LocalDateTime.now();
@@ -67,8 +67,8 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
+    public void setClave(String clave) {
+        this.clave = clave;
     }
 
     public String getCorreo() {
@@ -104,7 +104,7 @@ public class Usuario {
             this.correo = dto.correo();
         }
         if (dto.contrasenha() != null){
-            this.contrasena = dto.contrasenha();
+            this.clave = dto.contrasenha();
         }
         this.fechaActualization=LocalDateTime.now();
     }
@@ -116,8 +116,8 @@ public class Usuario {
         return nombre;
     }
 
-    public String getContrasena() {
-        return contrasena;
+    public String getClave() {
+        return clave;
     }
 
 

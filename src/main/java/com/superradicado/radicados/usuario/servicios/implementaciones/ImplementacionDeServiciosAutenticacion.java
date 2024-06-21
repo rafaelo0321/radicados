@@ -53,7 +53,7 @@ public class ImplementacionDeServiciosAutenticacion implements IServiciosUsuario
                 jwt.put("error", "Usuario no registrado!");
                 return jwt;
             }
-            if (verificarContrasena(loginRequest.clave(), userEntity.get().getContrasena())) {
+            if (verificarContrasena(loginRequest.clave(), userEntity.get().getClave())) {
 
                 jwt.put("jwt", jwtUtilityService.generateJWT(userEntity));
                 jwt.put("username",loginRequest.nombre());
@@ -75,29 +75,33 @@ public class ImplementacionDeServiciosAutenticacion implements IServiciosUsuario
     @Override
     public ResponseEntity<?> registrar(UsuarioDto userEntity){
         Usuario usuario = null;
-
         try {
             usuario = this.userRepository.findByNombre(userEntity.nombre()).orElse(null);
+
             if(!Objects.isNull(usuario)){
-                return new ResponseEntity<>(new ErrorDto("Ya se encuentra registrado un usuario con ese correo electrónico"), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(new ErrorDto("Ya se encuentra registrado un usuario con ese nombre de usuario"), HttpStatus.BAD_REQUEST);
             }
             if(userEntity.idRol() == null){
                 return new ResponseEntity<>(new ErrorDto("Debe seleccionar algún rol para el usuario"), HttpStatus.BAD_REQUEST);
             }
-            if (userEntity.correo().contains("@supervigilancia.gov.co")){
-                Set<Roles> roles = new HashSet<Roles>();
-                Roles rol = rolRepository.findById(userEntity.idRol()).orElse(null);
-                roles.add(rol);
-                Usuario nuevoUsuario = new Usuario(userEntity);
-                nuevoUsuario.setContrasena(passwordEncoder.encode(userEntity.contrasenha()));
-                nuevoUsuario.setRoles(roles);
-                userRepository.save(nuevoUsuario);
-
-                MostrarUsuarioDto mostrarUsuarios = new MostrarUsuarioDto(nuevoUsuario);
-
-                return new ResponseEntity<>(mostrarUsuarios, HttpStatus.CREATED);
+            if (!userEntity.correo().contains("@supervigilancia.gov.co")){
+                return new ResponseEntity<>(new ErrorDto("EL correo electronico no corresponde al dominio de la supervigilancia"), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>(new ErrorDto("EL correo electronico no corresponde al dominio de la supervigilancia"), HttpStatus.BAD_REQUEST);
+            Optional<Usuario> correoU = userRepository.findByCorreo(userEntity.correo());
+            if (correoU.isPresent()){
+                return new ResponseEntity<>(new ErrorDto("El correo ingresado ya se encuentra segistrado"),HttpStatus.BAD_REQUEST);
+            }
+            Set<Roles> roles = new HashSet<Roles>();
+            Roles rol = rolRepository.findById(userEntity.idRol()).orElse(null);
+            roles.add(rol);
+            Usuario nuevoUsuario = new Usuario(userEntity);
+            nuevoUsuario.setClave(passwordEncoder.encode(userEntity.contrasenha()));
+            nuevoUsuario.setRoles(roles);
+            userRepository.save(nuevoUsuario);
+
+            MostrarUsuarioDto mostrarUsuarios = new MostrarUsuarioDto(nuevoUsuario);
+
+            return new ResponseEntity<>(mostrarUsuarios, HttpStatus.CREATED);
         } catch (DataAccessException e) {
             return new ResponseEntity<>("Ha ocurrido un error en la base de datos"+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -124,7 +128,6 @@ public class ImplementacionDeServiciosAutenticacion implements IServiciosUsuario
         }
         return false;
     }
-
     private static boolean tieneConsonantesSeguidas(String nombre) {
         String nombreMinusculas = nombre.toLowerCase();
         int contadorConsonantesSeguidas = 0;

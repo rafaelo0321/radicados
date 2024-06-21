@@ -34,7 +34,7 @@ public class AutenticacionService implements UserDetailsService {
         }
         return new User(
                 u.get().getNombre(),
-                u.get().getContrasena(),
+                u.get().getClave(),
                 true,
                 true,
                 true,

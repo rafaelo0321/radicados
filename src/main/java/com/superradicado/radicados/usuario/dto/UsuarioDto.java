@@ -1,4 +1,12 @@
 package com.superradicado.radicados.usuario.dto;
 
-public record UsuarioDto(String nombre, String contrasenha,String correo,Long idRol) {
+import jakarta.validation.constraints.NotBlank;
+
+public record UsuarioDto(
+        @NotBlank(message = "El nombre no debe estar vacio")
+        String nombre,
+
+        String contrasenha,
+        String correo,
+        Long idRol) {
 }

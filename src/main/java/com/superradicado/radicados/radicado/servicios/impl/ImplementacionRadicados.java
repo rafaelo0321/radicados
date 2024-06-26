@@ -35,4 +35,10 @@ public class ImplementacionRadicados implements IServiciosRadicados {
         }
     }
 
+    public String generarConsecutivo(){
+        String numero = String.valueOf(iRadicadoRepositorio.count());
+
+        return numero;
+    }
+
 }

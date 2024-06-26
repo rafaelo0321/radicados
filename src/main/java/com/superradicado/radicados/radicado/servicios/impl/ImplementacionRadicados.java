@@ -4,6 +4,7 @@ import com.superradicado.radicados.radicado.controlador.RadicadoController;
 import com.superradicado.radicados.radicado.dto.crear.CrearRadicadoDto;
 import com.superradicado.radicados.radicado.dto.mostrar.MostrarRadicadoDto;
 import com.superradicado.radicados.radicado.entidades.Radicado;
+import com.superradicado.radicados.radicado.enums.TipoDocumental;
 import com.superradicado.radicados.radicado.repositorios.IDespendenciaRepositorio;
 import com.superradicado.radicados.radicado.repositorios.IRadicadoRepositorio;
 import com.superradicado.radicados.radicado.servicios.IServiciosRadicados;
@@ -48,12 +49,11 @@ public class ImplementacionRadicados implements IServiciosRadicados {
             Radicado nuevoRadicado = new Radicado(crearRadicado);
 
             String numeroDependencia = String.valueOf(iDespendenciaRepositorio.findByNombre(crearRadicado.nombreDependencia()).getNumeroDependencia());
-            String numeroDeRadicado = Year.now().getValue() + numeroDependencia + generarConsecutivo() + crearRadicado.tipoDocumental() + crearRadicado.contingencia();
+            String numeroDeRadicado = Year.now().getValue() + numeroDependencia + generarConsecutivo() + numeroEnumTipoDocumental(crearRadicado.tipoDocumental())+ crearRadicado.contingencia();
 
             nuevoRadicado.setNumeroRadicado(numeroDeRadicado);
             nuevoRadicado.setDependencia(iDespendenciaRepositorio.findByNombre(crearRadicado.nombreDependencia()));
             nuevoRadicado.setUsuario(iUsuarioRepositorio.findById(1L).orElse(null));
-            System.out.println("Hola "+nuevoRadicado);
 
             iRadicadoRepositorio.save(nuevoRadicado);
 
@@ -74,5 +74,21 @@ public class ImplementacionRadicados implements IServiciosRadicados {
         String formatoConsecutivo = String.format("%06d", consecutivo);
         consecutivo++;
         return formatoConsecutivo;
+    }
+
+    public String numeroEnumTipoDocumental(TipoDocumental tipoDocumental){
+        if(tipoDocumental == TipoDocumental.OFICIOS){
+            return "1";
+        }
+        if(tipoDocumental == TipoDocumental.MEMORANDOS){
+            return "3";
+        }
+        if(tipoDocumental == TipoDocumental.CIRCULARES){
+            return "5";
+        }
+        if(tipoDocumental == TipoDocumental.RESOLUCIONES){
+            return "7";
+        }
+        return "8";
     }
 }

@@ -13,15 +13,16 @@ public class Radicado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_RADICADO")
     private Long id;
-    @Column(name = "NUMERO_RADICADO", unique = true,nullable = false,length = 12)
+    @Column(name = "NUMERO_RADICADO")
     private String numeroRadicado;
-    @Column(name = "NOMBRE_EMPRESA", unique = true,nullable = false,length = 200)
+
+    @Column(name = "NOMBRE_EMPRESA")
     private String nombreEmpresa;
-    @Column(name = "NOMBRE_PERSONA_NATURAL", unique = true,nullable = false,length = 100)
+    @Column(name = "NOMBRE_PERSONA_NATURAL")
     private String personaQueRadica;
-    @Column(name = "ASUNTO", length = 100)
+    @Column(name = "ASUNTO")
     private String asunto;
-    @Column(name = "DESCRIPCION", length = 220)
+    @Column(name = "DESCRIPCION")
     private String descripcion;
     private Integer folio;
     private Integer anexos;
@@ -130,5 +131,22 @@ public class Radicado {
 
     public void setDependencia(Dependencia dependencia) {
         this.dependencia = dependencia;
+    }
+
+    @Override
+    public String toString() {
+        return "Radicado{" +
+                "id=" + id +
+                ", numeroRadicado='" + numeroRadicado + '\'' +
+                ", nombreEmpresa='" + nombreEmpresa + '\'' +
+                ", personaQueRadica='" + personaQueRadica + '\'' +
+                ", asunto='" + asunto + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", folio=" + folio +
+                ", anexos=" + anexos +
+                ", fechaCreacion=" + fechaCreacion +
+                ", usuario=" + usuario +
+                ", dependencia=" + dependencia +
+                '}';
     }
 }

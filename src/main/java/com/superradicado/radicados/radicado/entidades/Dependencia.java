@@ -19,6 +19,14 @@ public class Dependencia {
             cascade = CascadeType.ALL)
     private List<Radicado> radicados = new ArrayList<>();
 
+    public Dependencia(Integer numeroDependencia, String nombre) {
+        this.numeroDependencia = numeroDependencia;
+        this.nombre = nombre;
+    }
+
+    public Dependencia() {
+    }
+
     public Long getId() {
         return id;
     }

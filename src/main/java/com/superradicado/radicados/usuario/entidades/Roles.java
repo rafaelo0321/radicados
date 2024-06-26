@@ -27,12 +27,10 @@ public class Roles {
     public Roles() {
     }
 
-    public Roles(String nombre,
-                LocalDateTime fechaDeCreacion,
-                LocalDateTime fechaActualizacion) {
+    public Roles(String nombre) {
         this.nombre = nombre;
-        this.fechaDeCreacion = fechaDeCreacion;
-        this.fechaActualizacion = fechaActualizacion;
+        this.fechaDeCreacion = LocalDateTime.now();
+        this.fechaActualizacion = null;
     }
 
     public Roles(MostrarRolesDto dto) {

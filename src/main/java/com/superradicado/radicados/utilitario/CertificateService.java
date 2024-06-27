@@ -1,7 +1,10 @@
 package com.superradicado.radicados.utilitario;
 
+import com.superradicado.radicados.radicado.dto.crear.CrearRadicadoDto;
 import com.superradicado.radicados.radicado.entidades.Radicado;
 import com.superradicado.radicados.radicado.repositorios.IRadicadoRepositorio;
+import com.superradicado.radicados.radicado.servicios.IServiciosRadicados;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -26,9 +29,11 @@ import java.util.Locale;
 @Service
 public class CertificateService implements GenerarCertificadoService {
 
-    private final IRadicadoRepositorio repositorio;
+    private final IServiciosRadicados repositorio;
 
-    public CertificateService(IRadicadoRepositorio repositorio) {
+
+
+    public CertificateService(IServiciosRadicados repositorio) {
         this.repositorio = repositorio;
     }
 
@@ -64,9 +69,9 @@ public class CertificateService implements GenerarCertificadoService {
     }
 
     @Override
-    public byte[] crearSelloDeImpresion(String radicado) {
+    public byte[] crearSelloDeImpresion(Authentication authentication, CrearRadicadoDto radicado) {
         try {
-            Radicado selloDeImpresion = repositorio.findByNumeroRadicado(radicado);
+            Radicado selloDeImpresion = repositorio.generarRadicadoDesdeCorreoElectronico(authentication,radicado);
 
             PDDocument document = new PDDocument();
             PDPage page = new PDPage();
@@ -78,21 +83,25 @@ public class CertificateService implements GenerarCertificadoService {
             PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true);
 
             // Cargar la imagen
-            //InputStream imageStream = getClass().getResourceAsStream();
-            PDImageXObject logoFondoBn = PDImageXObject.createFromFile("/templates/img/logobn.png", document);
+
+            PDImageXObject logoFondoBn = PDImageXObject.createFromFile("src/main/resources/templates/img/logotipos.png", document);
             // Dibujar la imagen en el documento PDF
-            contentStream.drawImage(logoFondoBn, 40, 350, 500, 140);
+            contentStream.drawImage(logoFondoBn, 10, 660, 250, 150);
             //Inicio de textos
             contentStream.beginText();
 
             contentStream.setFont(customFont, 11);
-            contentStream.newLineAtOffset(50, 600);
-            contentStream.showText("La Superintendencia De Vigilancia y Seguridad Privada");
-            contentStream.setFont(customFont, 11);
-            contentStream.newLineAtOffset(180, -35);
-            contentStream.showText("Certifica:");
-            contentStream.newLineAtOffset(-180, -50);
-
+            contentStream.newLineAtOffset(240, 760);
+            contentStream.showText("Fecha Expedido: "+extraerFecha(selloDeImpresion.getFechaCreacion()));
+            contentStream.newLineAtOffset(0, -15);
+            contentStream.showText("Hora Expedido: "+ extraerHora(selloDeImpresion.getFechaCreacion()));
+            contentStream.newLineAtOffset(0, -15);
+            contentStream.showText("Dependencia: "+selloDeImpresion.getDependencia().getNumeroDependencia());
+            contentStream.newLineAtOffset(0, -15);
+            contentStream.showText("Folio: "+selloDeImpresion.getFolio());
+            contentStream.newLineAtOffset(0, -15);
+            contentStream.showText("Usuario que radica: "+selloDeImpresion.getFolio());
+            contentStream.newLineAtOffset(0, -15);
             //fin de textos
             contentStream.endText();
 
@@ -100,12 +109,7 @@ public class CertificateService implements GenerarCertificadoService {
             ByteArrayOutputStream qrOutputStream = generateQRCode(selloDeImpresion);
             PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, qrOutputStream.toByteArray(), "QRCode");
 
-            contentStream.drawImage(pdImage, 500, 700, 70, 70);
-
-            // Cargar la imagen y Dibuja la imagen en el documento PDF
-            PDImageXObject image = PDImageXObject.createFromFile("src/main/resources/templates/img/logo.png", document);
-            contentStream.drawImage(image, 50, 720, 170, 35);
-
+            contentStream.drawImage(pdImage, 500, 690, 90, 90);
 
             contentStream.close();
             ByteArrayOutputStream output = new ByteArrayOutputStream();

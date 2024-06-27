@@ -12,11 +12,10 @@ import java.time.LocalDateTime;
 public class Radicado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_RADICADO")
+    @Column(name = "ID_RADICADO",unique = true)
     private Long id;
-    @Column(name = "NUMERO_RADICADO")
+    @Column(name = "NUMERO_RADICADO",unique = true)
     private String numeroRadicado;
-
     @Column(name = "NOMBRE_EMPRESA")
     private String nombreEmpresa;
     @Column(name = "NOMBRE_PERSONA_NATURAL")

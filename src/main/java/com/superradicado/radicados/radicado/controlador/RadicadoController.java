@@ -4,6 +4,7 @@ import com.superradicado.radicados.radicado.dto.crear.CrearRadicadoDto;
 import com.superradicado.radicados.radicado.dto.crear.CrearRadicadoPresencialDto;
 import com.superradicado.radicados.radicado.servicios.IServiciosRadicados;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +19,14 @@ public class RadicadoController {
     }
     @PostMapping("/generar/desde/correo")
     public ResponseEntity<?> generarRadicadoCorreo(@RequestBody CrearRadicadoDto crearRadicadoDto, Authentication auth){
-        return implementacionRadicados.generarRadicadoDesdeCorreoElectronico(auth,crearRadicadoDto);
+        return new ResponseEntity<>(implementacionRadicados.generarRadicadoDesdeCorreoElectronico(auth,crearRadicadoDto), HttpStatus.CREATED);
     }
     @PostMapping("/generar/presencial")
     public ResponseEntity<?> generarRadicadoPresencial(@RequestBody CrearRadicadoPresencialDto crearRadicadoDto, Authentication auth){
-        return implementacionRadicados.generarRadicadosDeFormaPresencial(auth,crearRadicadoDto);
+        return new ResponseEntity<>(implementacionRadicados.generarRadicadosDeFormaPresencial(auth,crearRadicadoDto),HttpStatus.CREATED);
     }
     @GetMapping("/mostrar/todos")
     public ResponseEntity<?> mostrarTodos(){
-        return implementacionRadicados.mostrarTodosRadicados();
+        return new ResponseEntity<>(implementacionRadicados.mostrarTodosRadicados(),HttpStatus.OK);
     }
 }

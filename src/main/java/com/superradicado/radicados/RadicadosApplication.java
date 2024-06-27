@@ -31,7 +31,7 @@ public class RadicadosApplication {
 	@Bean
 	CommandLineRunner init(IDespendenciaRepositorio iDespendenciaRepositorio, IUsuarioRepositorio iUsuarioRepositorio, IRoleRepositorio roleRepositorio){
 		return args -> {
-			/*Dependencia dependencia = new Dependencia( 100,"DESPACHO SUPERINTENDENTE DE VIGILANCIA Y SEGURIDAD PRIVADA");
+			Dependencia dependencia = new Dependencia( 100,"DESPACHO SUPERINTENDENTE DE VIGILANCIA Y SEGURIDAD PRIVADA");
 			Dependencia dependenciaDos = new Dependencia( 200,"OFICINA DE COMUNICACIONES");
 			iDespendenciaRepositorio.save(dependencia);
 			iDespendenciaRepositorio.save(dependenciaDos);
@@ -42,7 +42,7 @@ public class RadicadosApplication {
 
 			Usuario usuario = new Usuario("prueba",passwordEncoder.encode("Contraseña.123"),"correo@correo.com");
 			usuario.setRoles(roles);
-			iUsuarioRepositorio.save(usuario);*/
+			iUsuarioRepositorio.save(usuario);
 		};
 	}
 }

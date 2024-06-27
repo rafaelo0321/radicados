@@ -106,13 +106,6 @@ public class CertificateService implements GenerarCertificadoService {
             PDImageXObject image = PDImageXObject.createFromFile("src/main/resources/templates/img/logo.png", document);
             contentStream.drawImage(image, 50, 720, 170, 35);
 
-            // Cargar la imagen
-            PDImageXObject firma = PDImageXObject.createFromFile("src/main/resources/templates/img/firma.png", document);
-            contentStream.drawImage(firma, 220, 100, 178, 92);
-
-            // Cargar la imagen
-            PDImageXObject barra = PDImageXObject.createFromFile("src/main/resources/templates/img/barra.jpg", document);
-            contentStream.drawImage(barra, 20, 55, 560, 5);
 
             contentStream.close();
             ByteArrayOutputStream output = new ByteArrayOutputStream();

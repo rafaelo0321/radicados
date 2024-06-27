@@ -2,6 +2,7 @@ package com.superradicado.radicados.radicado.servicios.impl;
 
 import com.superradicado.radicados.radicado.controlador.RadicadoController;
 import com.superradicado.radicados.radicado.dto.crear.CrearRadicadoDto;
+import com.superradicado.radicados.radicado.dto.crear.CrearRadicadoPresencialDto;
 import com.superradicado.radicados.radicado.dto.mostrar.MostrarRadicadoDto;
 import com.superradicado.radicados.radicado.entidades.Radicado;
 import com.superradicado.radicados.radicado.enums.TipoDocumental;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -39,11 +41,11 @@ public class ImplementacionRadicados implements IServiciosRadicados {
         this.iUsuarioRepositorio = iUsuarioRepositorio;
     }
 
-    public Radicado guardarRadicado(Radicado radicado){
-        return iRadicadoRepositorio.save(radicado);
+    public void guardarRadicado(Radicado radicado){
+        iRadicadoRepositorio.save(radicado);
     }
     @Override
-    public ResponseEntity<?> generarRadicado(CrearRadicadoDto crearRadicado){
+    public ResponseEntity<?> generarRadicadoDesdeCorreoElectronico(Authentication authentication, CrearRadicadoDto crearRadicado){
 
         try{
             Radicado nuevoRadicado = new Radicado(crearRadicado);
@@ -53,19 +55,48 @@ public class ImplementacionRadicados implements IServiciosRadicados {
 
             nuevoRadicado.setNumeroRadicado(numeroDeRadicado);
             nuevoRadicado.setDependencia(iDespendenciaRepositorio.findByNombre(crearRadicado.nombreDependencia()));
-            nuevoRadicado.setUsuario(iUsuarioRepositorio.findById(1L).orElse(null));
+            nuevoRadicado.setUsuario(iUsuarioRepositorio.findByNombre(authentication.getName()).orElse(null));
 
-            iRadicadoRepositorio.save(nuevoRadicado);
+            guardarRadicado(nuevoRadicado);
 
             log.info("Se generó correctamente el radicado de entrada");
-            return new ResponseEntity<>(new MostrarRadicadoDto(nuevoRadicado),HttpStatus.OK);
+            return new ResponseEntity<>(new MostrarRadicadoDto(nuevoRadicado),HttpStatus.CREATED);
         }catch (Exception e){
             log.error(e.getMessage());
             return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @Override
+    public ResponseEntity<?> mostrarTodosRadicados(){
+        try {
+            log.info("Se muestra un listado con todos los radicados ordenados por la fecha");
+            return new ResponseEntity<>(iRadicadoRepositorio.findAll().stream().map(MostrarRadicadoDto::new).sorted(),HttpStatus.OK);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @Override
+    public ResponseEntity<?> generarRadicadosDeFormaPresencial(Authentication authentication, CrearRadicadoPresencialDto presencial){
+        try {
+            Radicado radicado = new Radicado(presencial);
+            String numeroDependencia = String.valueOf(iDespendenciaRepositorio.findByNombre(presencial.nombreDependencia()).getNumeroDependencia());
+            String numeroDeRadicado = Year.now().getValue() + numeroDependencia + generarConsecutivo() + numeroEnumTipoDocumental(presencial.tipoDocumental())+ presencial.contingencia();
+            radicado.setNumeroRadicado(numeroDeRadicado);
+            radicado.setPersonaQueRadica(authentication.getName());
+            radicado.setDependencia(iDespendenciaRepositorio.findByNombre(presencial.nombreDependencia()));
+            radicado.setUsuario(iUsuarioRepositorio.findByNombre(authentication.getName()).orElse(null));
+            guardarRadicado(radicado);
 
-    public String generarConsecutivo(){
+            log.info("Se generó correctamente el radicado de forma presencial");
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private static String generarConsecutivo(){
         int anioActual = LocalDate.now().getYear();
         if (anioActual > ultimoAnio) {
             consecutivo = 0;
@@ -75,20 +106,14 @@ public class ImplementacionRadicados implements IServiciosRadicados {
         consecutivo++;
         return formatoConsecutivo;
     }
-
-    public String numeroEnumTipoDocumental(TipoDocumental tipoDocumental){
-        if(tipoDocumental == TipoDocumental.OFICIOS){
-            return "1";
-        }
-        if(tipoDocumental == TipoDocumental.MEMORANDOS){
-            return "3";
-        }
-        if(tipoDocumental == TipoDocumental.CIRCULARES){
-            return "5";
-        }
-        if(tipoDocumental == TipoDocumental.RESOLUCIONES){
-            return "7";
-        }
-        return "8";
+    private static String numeroEnumTipoDocumental(TipoDocumental tipoDocumental){
+        return switch (tipoDocumental) {
+            case OFICIOS -> "1";
+            case MEMORANDOS -> "3";
+            case CIRCULARES -> "5";
+            case RESOLUCIONES -> "7";
+            case AUTOS -> "8";
+        };
     }
+
 }

@@ -5,6 +5,7 @@ import com.superradicado.radicados.radicado.repositorios.IDespendenciaRepositori
 import com.superradicado.radicados.radicado.repositorios.IRadicadoRepositorio;
 import com.superradicado.radicados.usuario.entidades.Roles;
 import com.superradicado.radicados.usuario.entidades.Usuario;
+import com.superradicado.radicados.usuario.enums.NombreRoles;
 import com.superradicado.radicados.usuario.repositorios.IRoleRepositorio;
 import com.superradicado.radicados.usuario.repositorios.IUsuarioRepositorio;
 import org.springframework.boot.CommandLineRunner;
@@ -36,8 +37,8 @@ public class RadicadosApplication {
 			iDespendenciaRepositorio.save(dependenciaDos);
 
 			Set<Roles> roles = new HashSet<>();
-			roles.add(roleRepositorio.save(new Roles("User")));
-			roles.add(roleRepositorio.save(new Roles("Admin")));
+			roles.add(roleRepositorio.save(new Roles(String.valueOf(NombreRoles.USER))));
+			roles.add(roleRepositorio.save(new Roles(String.valueOf(NombreRoles.ADMIN))));
 
 			Usuario usuario = new Usuario("prueba",passwordEncoder.encode("Contraseña.123"),"correo@correo.com");
 			usuario.setRoles(roles);

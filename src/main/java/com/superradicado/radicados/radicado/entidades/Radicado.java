@@ -1,6 +1,7 @@
 package com.superradicado.radicados.radicado.entidades;
 
 import com.superradicado.radicados.radicado.dto.crear.CrearRadicadoDto;
+import com.superradicado.radicados.radicado.dto.crear.CrearRadicadoPresencialDto;
 import com.superradicado.radicados.usuario.entidades.Usuario;
 import jakarta.persistence.*;
 
@@ -47,6 +48,13 @@ public class Radicado {
         this.asunto = crearRadicado.asunto();
         this.personaQueRadica = crearRadicado.personaQueRadica();
         this.nombreEmpresa = crearRadicado.nombreEmpresa();
+    }
+
+    public Radicado(CrearRadicadoPresencialDto dto) {
+        this.folio = dto.folio();
+        this.anexos = dto.anexos();
+        this.nombreEmpresa = dto.nombreEmpresa();
+        this.fechaCreacion = LocalDateTime.now();
     }
 
     public Long getId() {

@@ -1,6 +1,6 @@
 package com.superradicado.radicados.radicado.controlador;
 
-import com.superradicado.radicados.radicado.servicios.GenerarCertificadoService;
+import com.superradicado.radicados.utilitario.GenerarCertificadoService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/sello")
 public class GenerarCertificadoController {
 
 
@@ -22,13 +22,13 @@ public class GenerarCertificadoController {
     }
 
 
-    @GetMapping(value = "/generar/certificado", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> generarCertificadoApo(@RequestParam String cedula){
+    @GetMapping(value = "/generar/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> generarSelloRadicado(@RequestParam String numeroRadicado){
         try {
-            byte[] pdf = pdfService.crearCertificado();
+            byte[] pdf = pdfService.crearSelloDeImpresion(numeroRadicado);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=doc_"+cedula+".pdf");
+            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=doc_"+numeroRadicado+".pdf");
             return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
         }catch (Exception e){
             System.err.println(e.getMessage());

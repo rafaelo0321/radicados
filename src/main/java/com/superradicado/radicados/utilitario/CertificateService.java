@@ -4,6 +4,7 @@ import com.superradicado.radicados.radicado.dto.crear.CrearRadicadoDto;
 import com.superradicado.radicados.radicado.entidades.Radicado;
 import com.superradicado.radicados.radicado.repositorios.IRadicadoRepositorio;
 import com.superradicado.radicados.radicado.servicios.IServiciosRadicados;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import com.google.zxing.BarcodeFormat;
@@ -31,8 +32,8 @@ public class CertificateService implements GenerarCertificadoService {
 
     private final IServiciosRadicados repositorio;
 
-
-
+    @Value("${imagen.logotipo}")
+    private String rutaImagen;
     public CertificateService(IServiciosRadicados repositorio) {
         this.repositorio = repositorio;
     }

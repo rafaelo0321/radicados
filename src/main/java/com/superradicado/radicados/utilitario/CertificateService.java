@@ -2,8 +2,9 @@ package com.superradicado.radicados.utilitario;
 
 import com.superradicado.radicados.radicado.dto.crear.CrearRadicadoDto;
 import com.superradicado.radicados.radicado.entidades.Radicado;
-import com.superradicado.radicados.radicado.repositorios.IRadicadoRepositorio;
 import com.superradicado.radicados.radicado.servicios.IServiciosRadicados;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import java.util.Locale;
 
 @Service
 public class CertificateService implements GenerarCertificadoService {
+    private final Logger LOG = LoggerFactory.getLogger(CertificateService.class);
 
     private final IServiciosRadicados repositorio;
 
@@ -78,17 +80,14 @@ public class CertificateService implements GenerarCertificadoService {
             PDPage page = new PDPage();
             document.addPage(page);
 
-            //fuentes cargas desde el resources
             InputStream fontStream = getClass().getResourceAsStream("/templates/font/verdana.ttf");
             PDType0Font customFont = PDType0Font.load(document, fontStream);
             PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true);
 
-            // Cargar la imagen
-
             PDImageXObject logoFondoBn = PDImageXObject.createFromFile("src/main/resources/templates/img/logotipos.png", document);
-            // Dibujar la imagen en el documento PDF
+            //PDImageXObject logoFondoBn = PDImageXObject.createFromFile("/opt/tomcat/WEB-INF/classes/templates/img/logotipos.png", document);
+
             contentStream.drawImage(logoFondoBn, 10, 660, 250, 150);
-            //Inicio de textos
             contentStream.beginText();
 
             contentStream.setFont(customFont, 11);
@@ -103,10 +102,9 @@ public class CertificateService implements GenerarCertificadoService {
             contentStream.newLineAtOffset(0, -15);
             contentStream.showText("Usuario que radica: "+selloDeImpresion.getFolio());
             contentStream.newLineAtOffset(0, -15);
-            //fin de textos
+
             contentStream.endText();
 
-            //Dibujar la imagen en el documento PDF
             ByteArrayOutputStream qrOutputStream = generateQRCode(selloDeImpresion);
             PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, qrOutputStream.toByteArray(), "QRCode");
 
@@ -120,7 +118,7 @@ public class CertificateService implements GenerarCertificadoService {
 
             return output.toByteArray();
         }catch (IOException e){
-            System.err.println(e.getMessage());
+            LOG.error(e.getMessage());
             return null;
         }
     }

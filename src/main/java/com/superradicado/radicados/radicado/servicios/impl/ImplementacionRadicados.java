@@ -77,9 +77,10 @@ public class ImplementacionRadicados implements IServiciosRadicados {
     public List<MostrarRadicadoDto> mostrarTodosRadicados(){
         try {
             log.info("Se muestra un listado con todos los radicados ordenados por la fecha");
-            return iRadicadoRepositorio.findAll().stream().map(MostrarRadicadoDto::new).sorted().collect(Collectors.toList());
+            return iRadicadoRepositorio.findAll().stream().map(MostrarRadicadoDto::new).collect(Collectors.toList());
         }catch (Exception e){
             log.error(e.getMessage());
+            log.error("e.getMessage()");
             return null;
         }
     }

@@ -29,7 +29,6 @@ public class Radicado {
     @Column(name = "FECHA_CREACION")
     private LocalDateTime fechaCreacion;
 
-    //
     @ManyToOne(fetch = FetchType.EAGER)
     private Usuario usuario;
     @ManyToOne(fetch = FetchType.EAGER)

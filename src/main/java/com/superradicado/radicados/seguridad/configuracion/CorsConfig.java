@@ -15,6 +15,7 @@ public class CorsConfig {
             cors.addAllowedMethod("*");
             cors.setAllowCredentials(true);
             cors.addAllowedOrigin("http://localhost:5174");
+            //cambiar aqui
             cors.addAllowedOrigin("http://localhost:5173");
             source.registerCorsConfiguration("/**", cors);
             return source;

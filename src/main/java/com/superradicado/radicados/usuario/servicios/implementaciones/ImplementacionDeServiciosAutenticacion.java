@@ -26,14 +26,12 @@ public class ImplementacionDeServiciosAutenticacion implements IServiciosUsuario
     private final IUsuarioRepositorio userRepository;
     private final IRoleRepositorio rolRepository;
     private final IJWTUtilityService jwtUtilityService;
-    private final ValidacionesDeUsuarios userValidations;
     private final PasswordEncoder passwordEncoder;
 
-    public ImplementacionDeServiciosAutenticacion(IUsuarioRepositorio userRepository, IRoleRepositorio rolRepository, IJWTUtilityService jwtUtilityService, ValidacionesDeUsuarios userValidations, PasswordEncoder passwordEncoder) {
+    public ImplementacionDeServiciosAutenticacion(IUsuarioRepositorio userRepository, IRoleRepositorio rolRepository, IJWTUtilityService jwtUtilityService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.rolRepository = rolRepository;
         this.jwtUtilityService = jwtUtilityService;
-        this.userValidations = userValidations;
         this.passwordEncoder = passwordEncoder;
     }
 

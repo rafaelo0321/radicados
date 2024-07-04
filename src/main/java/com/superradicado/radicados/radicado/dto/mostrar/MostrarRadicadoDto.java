@@ -13,7 +13,9 @@ public record MostrarRadicadoDto(Long id,
                                  String descripcion,
                                  Integer folio,
                                  Integer anexos,
-                                 LocalDateTime fechaCreacion) {
+                                 LocalDateTime fechaCreacion,
+                                 String dependencia,
+                                 String usuario) {
     public MostrarRadicadoDto(Radicado radicado){
         this(radicado.getId(),
                 radicado.getNumeroRadicado(),
@@ -23,6 +25,8 @@ public record MostrarRadicadoDto(Long id,
                 radicado.getDescripcion(),
                 radicado.getFolio(),
                 radicado.getAnexos(),
-                radicado.getFechaCreacion());
+                radicado.getFechaCreacion(),
+                radicado.getDependencia().getNombre(),
+                radicado.getUsuario().getNombre());
     }
 }

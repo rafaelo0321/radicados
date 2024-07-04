@@ -84,7 +84,7 @@ public class ImplementacionRadicados implements IServiciosRadicados {
             return null;
         }
     }
-    @Override
+   /* @Override
     public Radicado generarRadicadosDeFormaPresencial(Authentication authentication, CrearRadicadoPresencialDto presencial){
         try {
             Radicado radicado = new Radicado(presencial);
@@ -104,7 +104,7 @@ public class ImplementacionRadicados implements IServiciosRadicados {
             log.error(e.getMessage());
             return null;
         }
-    }
+    }*/
 
     private static String generarConsecutivo(){
         int anioActual = LocalDate.now().getYear();

@@ -12,5 +12,5 @@ import java.util.List;
 public interface IServiciosRadicados {
     Radicado generarRadicadoDesdeCorreoElectronico(Authentication authentication, CrearRadicadoDto crearRadicado);
     List<MostrarRadicadoDto> mostrarTodosRadicados();
-    Radicado generarRadicadosDeFormaPresencial(Authentication authentication, CrearRadicadoPresencialDto presencial);
+    //Radicado generarRadicadosDeFormaPresencial(Authentication authentication, CrearRadicadoPresencialDto presencial);
 }

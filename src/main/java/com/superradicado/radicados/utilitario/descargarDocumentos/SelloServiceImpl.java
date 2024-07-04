@@ -1,8 +1,9 @@
-package com.superradicado.radicados.utilitario;
+package com.superradicado.radicados.utilitario.descargarDocumentos;
 
 import com.superradicado.radicados.radicado.dto.crear.CrearRadicadoDto;
 import com.superradicado.radicados.radicado.entidades.Radicado;
 import com.superradicado.radicados.radicado.servicios.IServiciosRadicados;
+import com.superradicado.radicados.utilitario.GenerarSelloService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,14 +30,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 @Service
-public class CertificateService implements GenerarCertificadoService {
-    private final Logger LOG = LoggerFactory.getLogger(CertificateService.class);
+public class SelloServiceImpl implements GenerarSelloService {
+    private final Logger LOG = LoggerFactory.getLogger(SelloServiceImpl.class);
 
     private final IServiciosRadicados repositorio;
 
     @Value("${imagen.logotipo}")
     private String rutaImagen;
-    public CertificateService(IServiciosRadicados repositorio) {
+    public SelloServiceImpl(IServiciosRadicados repositorio) {
         this.repositorio = repositorio;
     }
 

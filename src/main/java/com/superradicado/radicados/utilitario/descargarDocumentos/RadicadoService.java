@@ -25,18 +25,29 @@ public class RadicadoService {
         this.radicadoRepository = radicadoRepository;
     }
 
-    public List<MostrarRadicadoDto> getRadicadosDelDia(LocalDateTime ahora) {
+    private List<MostrarRadicadoDto> getRadicadosDelDia(LocalDateTime ahora) {
         LocalDateTime hoy = LocalDateTime.now();
         return radicadoRepository.findByFechaCreacionBetween(ahora, hoy).stream().map(MostrarRadicadoDto::new).collect(Collectors.toList());
     }
+    private List<MostrarRadicadoDto> getRadicadosPorDependencia(Integer numeroDependencia) {
+        return radicadoRepository.findByDependenciaNumeroDependencia(numeroDependencia).stream().map(MostrarRadicadoDto::new).collect(Collectors.toList());
+    }
 
     public ByteArrayOutputStream generarExcel(LocalDateTime fecha){
-        try {
-            List<MostrarRadicadoDto> radicados = getRadicadosDelDia(fecha);
+        List<MostrarRadicadoDto> radicados = getRadicadosDelDia(fecha);
+        LOG.info("Se generó un documento en excel, con los radicados, segun la fecha {}", fecha.toString());
+        return generarEsquemaDelExcel(radicados);
+    }
 
+    public ByteArrayOutputStream generarExcelPorDependencia(Integer numeroDependencia){
+        List<MostrarRadicadoDto> radicados = getRadicadosPorDependencia(numeroDependencia);
+        LOG.info("Se generó un documento en excel, segun el numero de la dependencia {}", numeroDependencia);
+        return generarEsquemaDelExcel(radicados);
+    }
+    private ByteArrayOutputStream generarEsquemaDelExcel(List<MostrarRadicadoDto> radicados){
+        try {
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("Radicados");
-
             Row headerRow = sheet.createRow(0);
             headerRow.createCell(0).setCellValue("NumeroRadicado");
             headerRow.createCell(1).setCellValue("FechaCreacion");
@@ -62,13 +73,12 @@ public class RadicadoService {
                 row.createCell(8).setCellValue(radicado.dependencia());
                 row.createCell(9).setCellValue(radicado.usuario());
             }
-
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             workbook.write(outputStream);
-            LOG.info("Se generó un documento en excel, co");
             return outputStream;
-        }catch (IOException e){
-            LOG.error(e.getMessage());
+        }
+        catch (IOException e){
+            LOG.error("Se generó un error al crear el documento, {}",e.getMessage());
             return null;
         }
     }

@@ -10,10 +10,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
@@ -84,6 +81,27 @@ public class GenerarExcelController {
                     .headers(header)
                     .contentType(MediaType.parseMediaType("application/octet-stream"))
                     .body(new InputStreamResource(new ByteArrayInputStream(radicadoService.generarExcel(fechaInicio).toByteArray())));
+        } catch (RuntimeException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/descargar/dependencia/{numeroDependencia}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<InputStreamResource> descargarRadicadosExcelPorDependencia(
+            @PathVariable("numeroDependencia")
+            Integer numeroDependencia,
+            Authentication authentication
+    ) {
+        try {
+            auditoria.crearAuditoria("El usuario generó decarga de un archivo de excel con los radicados que se generaron segun la dependencia "+numeroDependencia+" hasta el dia de hoy", HttpMethod.GET.toString(),authentication);
+
+            HttpHeaders header = new HttpHeaders();
+            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=radicados_dependencia" +numeroDependencia + ".xlsx");
+            return ResponseEntity.ok()
+                    .headers(header)
+                    .contentType(MediaType.parseMediaType("application/octet-stream"))
+                    .body(new InputStreamResource(new ByteArrayInputStream(radicadoService.generarExcelPorDependencia(numeroDependencia).toByteArray())));
         } catch (RuntimeException e) {
             LOG.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

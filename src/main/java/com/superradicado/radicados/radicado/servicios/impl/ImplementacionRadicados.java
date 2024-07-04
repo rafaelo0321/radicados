@@ -84,6 +84,11 @@ public class ImplementacionRadicados implements IServiciosRadicados {
             return null;
         }
     }
+
+    @Override
+    public List<Radicado> listadoPorDependencia(Integer numero) {
+        return iRadicadoRepositorio.findByDependenciaNumeroDependencia(numero);
+    }
    /* @Override
     public Radicado generarRadicadosDeFormaPresencial(Authentication authentication, CrearRadicadoPresencialDto presencial){
         try {

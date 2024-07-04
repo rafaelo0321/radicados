@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface IRadicadoRepositorio extends JpaRepository<Radicado,Long> {
     Radicado findByNumeroRadicado(String numero);
-
     List<Radicado> findByFechaCreacionBetween(LocalDateTime n,LocalDateTime ahora);
+    List<Radicado> findByDependenciaNumeroDependencia(Integer numero);
 }

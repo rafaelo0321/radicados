@@ -26,7 +26,6 @@ public class GenerarSelloController {
     @GetMapping(value = "/generar/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> generarSelloRadicado(Authentication authentication, @RequestBody CrearRadicadoDto crearRadicado){
         try {
-
             byte[] pdf = pdfService.crearSelloDeImpresion(authentication,crearRadicado);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);

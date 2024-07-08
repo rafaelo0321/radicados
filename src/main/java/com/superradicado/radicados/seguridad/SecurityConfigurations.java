@@ -40,7 +40,6 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
-                                .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()

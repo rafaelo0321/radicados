@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class DependenciaImpl implements IDependenciaService {
+
     private final IDependenciaRepositorio iDependenciaRepositorio;
 
     public DependenciaImpl(IDependenciaRepositorio iDependenciaRepositorio) {
@@ -40,7 +41,6 @@ public class DependenciaImpl implements IDependenciaService {
     @Override
     public ResponseEntity<?> agregarDependencia(CrearDependenciaDto crearDependenciaDto) {
         try {
-
             return new ResponseEntity<>(
                     new MostrarDependencia(
                             iDependenciaRepositorio.save(

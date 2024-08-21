@@ -12,6 +12,6 @@ import java.util.List;
 public interface IServiciosRadicados {
     Radicado generarRadicadoDesdeCorreoElectronico(Authentication authentication, CrearRadicadoDto crearRadicado);
     List<MostrarRadicadoDto> mostrarTodosRadicados();
-    List<Radicado> listadoPorDependencia(Integer numero);
+    List<MostrarRadicadoDto> listadoPorDependencia(Integer numero);
     //Radicado generarRadicadosDeFormaPresencial(Authentication authentication, CrearRadicadoPresencialDto presencial);
 }

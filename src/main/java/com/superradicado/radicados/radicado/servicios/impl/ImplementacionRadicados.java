@@ -73,36 +73,14 @@ public class ImplementacionRadicados implements IServiciosRadicados {
             return iRadicadoRepositorio.findAll().stream().map(MostrarRadicadoDto::new).collect(Collectors.toList());
         }catch (Exception e){
             log.error(e.getMessage());
-            log.error("e.getMessage()");
             return null;
         }
     }
 
     @Override
-    public List<Radicado> listadoPorDependencia(Integer numero) {
-        return iRadicadoRepositorio.findByDependenciaNumeroDependencia(numero);
+    public List<MostrarRadicadoDto> listadoPorDependencia(Integer numero) {
+        return iRadicadoRepositorio.findByDependenciaNumeroDependencia(numero).stream().map(MostrarRadicadoDto::new).collect(Collectors.toList());
     }
-   /* @Override
-    public Radicado generarRadicadosDeFormaPresencial(Authentication authentication, CrearRadicadoPresencialDto presencial){
-        try {
-            Radicado radicado = new Radicado(presencial);
-            String numeroDependencia = String.valueOf(iDespendenciaRepositorio.findByNombre(presencial.nombreDependencia()).getNumeroDependencia());
-            String numeroDeRadicado = Year.now().getValue() + numeroDependencia + generarConsecutivo() + numeroEnumTipoDocumental(presencial.tipoDocumental())+ presencial.contingencia();
-            radicado.setNumeroRadicado(numeroDeRadicado);
-            radicado.setAsunto("Sin Asunto");
-            radicado.setDescripcion("Se radicó de forma presencial en las instalaciones de la supervigilancia por: "+ authentication.getName());
-            radicado.setPersonaQueRadica(authentication.getName());
-            radicado.setDependencia(iDespendenciaRepositorio.findByNombre(presencial.nombreDependencia()));
-            radicado.setUsuario(iUsuarioRepositorio.findByNombre(authentication.getName()).orElse(null));
-            guardarRadicado(radicado);
-
-            log.info("Se generó correctamente el radicado de forma presencial");
-            return radicado;
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return null;
-        }
-    }*/
 
     private static String generarConsecutivo(){
         int anioActual = LocalDate.now().getYear();
